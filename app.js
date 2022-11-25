@@ -8,6 +8,8 @@ const app = express();
 
 app.use(express.json());
 
+const port = process.env.PORT || 8000;
+
 
 //--------------------------------------------------------------- retrieve all books record-------------------------------------------------------- 
 app.get("/books",async(req,res)=>{
@@ -214,6 +216,6 @@ app.get("/book/issue_book/:isbn_no", async (req, res) => {
   });
   
 
-app.listen(process.env.PORT || 8000, () => {
+app.listen(port, () => {
   console.log("connected");
 });
