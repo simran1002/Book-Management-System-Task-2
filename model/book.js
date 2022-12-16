@@ -1,7 +1,7 @@
 const mongoose=require("mongoose");
 const validator=require("validator");
 
-// --------------------------------------------------creating schemas -------------------------------------
+
 
 const BookSchema=new mongoose.Schema({
     name:{
@@ -12,7 +12,7 @@ const BookSchema=new mongoose.Schema({
     isbn_no:{
         type:String,
         required:true,
-        unique:[true,"book Number already exist"],
+        unique:[true,"Book Number already exists"],
         maxlength:30
     },
     author_name:{
@@ -27,7 +27,7 @@ const BookSchema=new mongoose.Schema({
     }
 });
 
-//------------------------------------------------------- creating collection-------------------------------------------------
+
 
 const Book= new mongoose.model("Books",BookSchema);
 

@@ -70,7 +70,7 @@ app.get("/books/availibility/:amount",async(req,res)=>{
 
 
 //--------------------------------------------------------- fetching book record having inventory equal to zero-----------------------
-app.get("/books/unavailabe_Books",async(req,res)=>{
+app.get("/books/unavailable_Books",async(req,res)=>{
 
     try {
         const bookData=await Book.find({inventory:0});
@@ -142,79 +142,56 @@ app.patch("/book/update/:isbnno",async(req,res)=>{
 
 });
 
-
+//----------------------------------------------------------- Delete the record of particular book----------------------------------------------
+app.delete("/book/delete/:isbn_no", async (req, res) => {
+   
+      var result = "";
+      const isbn_no = req.params.isbn_no;
+      if (isbn_no) {
+        const book = await Book.find({ isbn_no: isbn_no });
+        console.log(book);
+          const bookDelete = await Book.deleteOne({ isbn_no: isbn_no });
+          result = "Book deleted";
+         // res.render("success", { message: result });
+          res.send("Book deleted")
+        }
+});
+//     } catch (e) {
+        
+//         res.status(400).send(e);
+//       res.send(result);
+   
+//       };
+//     }
+//   );
+  
 
  
-//----------------------------------------------------------- Delete all books Records----------------------------------------------
-app.delete("/books",async(req,res)=>{
-    try {
-        const deleteData=await Book.deleteMany();
-        console.log(deleteData);
-        res.send(deleteData);
-    } catch (e) {
-        res.status(500).send(e);   
-    }
-});
 
 //----------------------------------------------------------- Decrement the inventory of alloted book----------------------------------------------
 app.get("/book/issue_book/:isbn_no", async (req, res) => {
-    var message_1 = "";
-    var message_2 = "";
+   
     try {
-      var result = "";
       const isbn_no = req.params.isbn_no;
       var book = await Book.find({ isbn_no: isbn_no });
       console.log(book);
-      if (isbn_no) {
-        if (book.length != 0) {
-          if (book[0].inventory > 0) {
             const inventory = book[0].inventory - 1;
             const issueBook = await Book.updateOne(
               { isbn_no: isbn_no },
               { inventory: inventory }
             );
             console.log(issueBook);
+            res.send(book)
             book = await Book.find({ isbn_no: isbn_no });
             res.render("show", { books: book });
-          } else {
-            message_1 = "Sorry!";
-            message_2 = "Book unavailable";
-            res.render("error", {
-              message_1: message_1,
-              message_2: message_2,
-              brace: "(",
-            });
-          }
-        } else {
-          message_1 = "OOPS!";
-          message_2 = "Book not exist";
-          res.render("error", {
-            message_1: message_1,
-            message_2: message_2,
-            brace: "(",
-          });
-        }
-      } else {
-        message_1 = "ERROR 404";
-        message_2 = "Check URL";
-        res.render("error", {
-          message_1: message_1,
-          message_2: message_2,
-          brace: "(",
-        });
-      }
-    } catch (e) {
-      console.log(e);
-      message_1 = "OOPS!";
-      message_2 = "Something went wrong";
-      res.render("error", {
-        message_1: message_1,
-        message_2: message_2,
-        brace: "(",
-      });
-    }
-  });
-  
+            } catch (e) {
+        
+    res.status(400).send(e);
+  res.send(e);
+
+  };
+}
+);
 
 app.listen(port, () => {
   console.log("connected");
