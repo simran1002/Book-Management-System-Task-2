@@ -23,7 +23,7 @@ const BookSchema=new mongoose.Schema({
         type:String
     },
     inventory:{
-        type:Number
+        type:String
     }
 });
 
